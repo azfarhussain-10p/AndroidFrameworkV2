@@ -2,17 +2,40 @@ package com.qa.tests;
 
 import com.qa.base.AppFactory;
 import com.qa.pages.ProductPage;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.qa.pages.LoginPage;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class LoginTest extends AppFactory {
     LoginPage loginPage;
     ProductPage productPage;
+    InputStream inputStream;
+    JSONObject loginUser;
+
+    @BeforeClass
+    public void setupDataStream() throws IOException {
+        try {
+            String dataFileName = "data/loginUsers.json";
+            inputStream = getClass().getClassLoader().getResourceAsStream(dataFileName);
+            JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(inputStream));
+            loginUser = new JSONObject(jsonTokener);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+    }
 
     @BeforeMethod
     public void setup(Method method){
@@ -23,8 +46,8 @@ public class LoginTest extends AppFactory {
     @Test
     public void verifyInvalidUserName(){
         System.out.println("This test is used to verify that User will get Error Message while entering Invalid User Name");
-        loginPage.enterValidUserName("invalid_user");
-        loginPage.enterPassword("secret_sauce");
+        loginPage.enterValidUserName(loginUser.getJSONObject("invalidUser").getString("userName"));
+        loginPage.enterPassword(loginUser.getJSONObject("invalidUser").getString("password"));
         loginPage.clickLoginButton();
 
         String actualErrorMessage = loginPage.getErrorMessage();
@@ -36,8 +59,8 @@ public class LoginTest extends AppFactory {
     @Test
     public void verifyInvalidPassword(){
         System.out.println("This test is used to verify that User will get Error Message while entering Invalid Password");
-        loginPage.enterValidUserName("standard_user");
-        loginPage.enterPassword("invalid_password");
+        loginPage.enterValidUserName(loginUser.getJSONObject("invalidPassword").getString("userName"));
+        loginPage.enterPassword(loginUser.getJSONObject("invalidPassword").getString("password"));
         loginPage.clickLoginButton();
 
         String actualErrorMessage = loginPage.getErrorMessage();
@@ -48,14 +71,14 @@ public class LoginTest extends AppFactory {
 
     @Test
     public void verifyValidLogin(){
-        System.out.println("This test us used to validate the successful login functionality with valid User Name and Password");
-        loginPage.enterValidUserName("standard_user");
-        loginPage.enterPassword("secret_sauce");
-        productPage = loginPage.clickLoginButton();
+            System.out.println("This test us used to validate the successful login functionality with valid User Name and Password");
+            loginPage.enterValidUserName(loginUser.getJSONObject("validUserAndPassword").getString("userName"));
+            loginPage.enterPassword(loginUser.getJSONObject("validUserAndPassword").getString("password"));
+            productPage = loginPage.clickLoginButton();
 
-        String actualProductTitle = productPage.getTitle();
-        String expectedProductTitle = "PRODUCTS";
-        System.out.println("Actual Product page title is - " + actualProductTitle + "\n" + "Expected Product page title is - " + expectedProductTitle);
-        Assert.assertEquals(actualProductTitle, expectedProductTitle);
+            String actualProductTitle = productPage.getTitle();
+            String expectedProductTitle = "PRODUCTS";
+            System.out.println("Actual Product page title is - " + actualProductTitle + "\n" + "Expected Product page title is - " + expectedProductTitle);
+            Assert.assertEquals(actualProductTitle, expectedProductTitle);
     }
 }
