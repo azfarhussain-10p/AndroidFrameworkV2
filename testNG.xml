@@ -11,7 +11,7 @@
         <classes>
             <class name="com.qa.tests.LoginTest">
                 <methods>
-                    <include name="verifyValidLogin"/>
+                    <include name="verifyInvalidUserName"/>
                 </methods>
             </class>
         </classes>
