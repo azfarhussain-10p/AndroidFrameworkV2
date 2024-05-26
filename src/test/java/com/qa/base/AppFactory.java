@@ -24,6 +24,7 @@ public class AppFactory {
     public static AppiumDriver driver;
     public static ConfigReader configReader;
     protected static HashMap<String, String> stringHashMap = new HashMap<>();
+    protected static String dateTime;
     InputStream stringIs;
     Utilities utilities;
     static Logger log = LogManager.getLogger(AppFactory.class.getName());
@@ -40,6 +41,7 @@ public class AppFactory {
             log.fatal("This is Fatal Error Message");
 
             utilities = new Utilities();
+            dateTime = utilities.getDateTime();
             configReader = new ConfigReader();
             String xmlFileName = "strings/strings.xml";
             stringIs = getClass().getClassLoader().getResourceAsStream(xmlFileName);
@@ -86,6 +88,10 @@ public class AppFactory {
     public String getAttribute(WebElement element, String attribute) {
         waitForVisibility(element);
         return element.getAttribute(attribute);
+    }
+
+    public static String getDateAndTime() {
+        return dateTime;
     }
 
     @AfterTest

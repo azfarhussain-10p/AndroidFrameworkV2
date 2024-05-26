@@ -8,6 +8,9 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Utilities {
@@ -31,14 +34,20 @@ public class Utilities {
         // Get all Elements
         NodeList nodeList = document.getElementsByTagName("string");
 
-        for (int temp = 0; temp < nodeList.getLength(); temp++){
+        for (int temp = 0; temp < nodeList.getLength(); temp++) {
             Node node = nodeList.item((temp));
-            if ((node.getNodeType() == Node.ELEMENT_NODE)){
+            if ((node.getNodeType() == Node.ELEMENT_NODE)) {
                 Element element = (Element) node;
                 // Store each element Key value in Map
                 stringMap.put(element.getAttribute("name"), element.getTextContent());
             }
         }
         return stringMap;
+    }
+
+    public String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

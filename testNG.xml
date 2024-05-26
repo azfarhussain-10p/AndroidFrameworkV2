@@ -9,11 +9,7 @@
         <parameter name="platformVersion" value="11"/>
         <parameter name="deviceName" value="emulator-5554"/>
         <classes>
-            <class name="com.qa.tests.LoginTest">
-                <methods>
-                    <include name="verifyInvalidUserName"/>
-                </methods>
-            </class>
+            <class name="com.qa.tests.LoginTest"/>
         </classes>
     </test>
 </suite>
