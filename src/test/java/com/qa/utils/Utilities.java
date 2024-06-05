@@ -38,7 +38,7 @@ public class Utilities {
 
         // Get all Elements
         NodeList nodeList = document.getElementsByTagName("string");
-        log().info("==========");
+        log().info("=========");
 
         for (int temp = 0; temp < nodeList.getLength(); temp++) {
             Node node = nodeList.item((temp));
